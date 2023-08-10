@@ -1,0 +1,2 @@
+n_estimators,eta,min_child_weight,max_depth,colsample_bytree,subsample
+100,0.01,7,3,0.8,0.8
