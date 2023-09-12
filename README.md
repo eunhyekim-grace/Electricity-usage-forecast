@@ -145,6 +145,8 @@ for i in [test]:
 
 ### :warning: 주의 사항 
 Xgboost, LGBM은 earlystopping_rounds 사용을 위해서 낮은 version install해서 사용함.
+* Xgboost = 1.2.1
+* LGBM = 3.3.5
 
 ### xgboost, lgbm, catboost, extratree
 + 트리 기반 모델로 회귀와 분류에 모두 사용됨
