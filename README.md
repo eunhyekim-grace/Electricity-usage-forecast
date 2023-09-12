@@ -138,7 +138,7 @@ for i in [test]:
 
 ### 결과
 가장 결과 값이 좋은 상위 5개의 모델 중 비슷한 성격을 가진 Extra Trees Regressor와 Random Forest Regressor 중 가장 좋은 결과를 보여준 ET를 선택한 대신 사용하지 않은 RF Regressor를 제외하고 나머지 모든 모델을 사용해서 Regression 실시.
-
+![pycaret](https://github.com/Junoflows/Electricity-usage-forecast/assets/79469037/bca5f255-2a07-43df-b023-5a17e1895c87)
 
 
 ## 모델링
@@ -167,6 +167,83 @@ $RSME = (\frac{1}{n}\Sigma_{i=1}^n (\hat{Y_i}-Y_i)^2)^{0.5}$
 
 과소적합보다 과대 적합이 더 좋은 평가지표인 SMAPE 이므로 RMSE 보다 MAE 가 더 좋은 손실함수로 판단
 
+### Cross Validation
+* cv fold 사용
+* pds - 마지막 일주일을 validation set으로 설정
+* Blocked timeseries CV에서 mode를 추가해 custom cv를 만듦
+  mode1. n주씩 겹치면서 훈련 + 마지막 일주일을 validation set으로 사용
+  mode2. 가장 마지막 일주일을 고정 validation set으로 설정 + 훈련 데이터를 점차 줄임
+
+
+pds가 가장 좋은 성능을 보여줌.
+```
+class BlockingTimeSeriesSplit():
+    def __init__(self, n_splits = 0, mode = 1):
+        self.n_splits = n_splits
+        self.mode = mode
+
+    def get_n_splits(self, X, y, groups):
+        return self.n_splits
+
+    def split(self, X, y=None, groups=None):
+      if self.mode == 0:
+        n_samples = len(X)
+        k_fold_size = n_samples // self.n_splits
+        indices = np.arange(n_samples)
+
+        margin = 0
+        for i in range(self.n_splits):
+            start = i * k_fold_size
+            stop = start + k_fold_size
+            mid = int(0.8 * (stop - start)) + start
+            yield indices[start: mid], indices[mid + margin: stop]
+      elif self.mode == 1:
+        n_samples = len(X)
+        indices = np.arange(n_samples)
+
+        weeks = X.week.unique()
+        current_week = weeks[0]
+        end_week = weeks[-1]
+
+        n_range = end_week - self.n_splits - current_week +2
+
+        while current_week + n_range - 1 <= end_week:
+          start = X[X.week == current_week].index[0]
+          mid = X[X.week == current_week + n_range - 1].index[0]
+          stop = X[X.week == current_week + n_range - 1].index[-1]
+          current_week += 1
+          yield indices[start:mid], indices[mid:stop+1]
+      elif self.mode == 2:
+        n_samples = len(X)
+        indices = np.arange(n_samples)
+
+        weeks = X.week.unique()
+        current_week = weeks[0]
+        end_week = weeks[-1]
+
+        n_range = end_week - self.n_splits - current_week +2
+
+        mid = X[X.week == end_week].index[0]
+        stop = X[X.week == end_week].index[-1]
+        while current_week <= end_week - n_range + 1:
+          start = X[X.week == current_week].index[0]
+          current_week += 1
+          yield indices[start:mid], indices[mid:stop+1]
+      elif self.mode == 3:
+        n_samples = len(X)
+        indices = np.arange(n_samples)
+
+        weeks = X.week.unique()
+        start_week = weeks[0]
+        end_week = weeks[-1]
+
+        start = X[X.week == start_week].index[0]
+        mid = X[X.week == end_week].index[0]
+        stop = X[X.week == end_week].index[-1]
+
+        yield indices[start:mid], indices[mid:stop+1]
+
+```
 
 
 
