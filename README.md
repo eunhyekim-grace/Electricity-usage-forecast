@@ -104,8 +104,8 @@ grid = {'iterations': [500],
 gridsearchCV 를 이용해 최적의 파라미터 설정
 
 ### 손실함수
-![\Large MAE = \frac{1}{n}\Sigma_{i=1}^{n}| \hat{Y_i}-Y_i| ] <br/><br/>
-$ RSME = (\frac{1}{n}\Sigma_{i=1}^n (\hat{Y_i}-Y_i)^2)^{0.5} $  
+$MAE = \frac{1}{n}\Sigma_{i=1}^n| \hat{Y_i}-Y_i|$ <br/><br/>
+$RSME = (\frac{1}{n}\Sigma_{i=1}^n (\hat{Y_i}-Y_i)^2)^{0.5}$  
 
 과소적합보다 과대 적합이 더 좋은 평가지표인 SMAPE 이므로 RMSE 보다 MAE 가 더 좋은 손실함수로 판단
 
