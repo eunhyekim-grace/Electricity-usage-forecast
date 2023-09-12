@@ -38,7 +38,9 @@
 태양열과 동일한 방법으로 실시했으나 반비례 관계에 있는 건물이 존재하지 않아 사용하지 않음.
 
 
+
 ## 데이터 전처리
+
 
 ### 변수 추가
 + 시계열 데이터 시간 관련 변수 추가
@@ -98,10 +100,13 @@ eda_df.humidity = eda_df.humidity.interpolate(method = 'polynomial', order = 3)
 
 ### test 셋에도 같은 과정 적용으로 변수 통일
 
+
 ## autoML - pycaret 사용
+
 
 ### pycaret이란 
 ML workflow을 자동화 하는 opensource library로 여러 머신러닝 task에서 사용하는 모델들을 하나의 환경에서 비교하고 튜닝하는 등 간단한 코드를 통해 편리하게 사용할 수 있도록 자동화한 라이브러리.
+
 
 ### 간단한 코드
 pycaret은 돌리는데 시간이 오래 걸리기 때문에 가장 결과값이 좋지 않았던 40, 42, 54번 건물을 기준으로 가장 좋은 결과값을 리턴하는 모델을 찾아봄.
@@ -175,14 +180,16 @@ $RSME = (\frac{1}{n}\Sigma_{i=1}^n (\hat{Y_i}-Y_i)^2)^{0.5}$
 ### Cross Validation
 * cv fold 사용
 * pds - 마지막 일주일을 validation set으로 설정
-* Blocked timeseries CV에서 mode를 추가해 custom cv를 만듦
-  mode1. n주씩 겹치면서 훈련 + 마지막 일주일을 validation set으로 사용
-  mode2. 가장 마지막 일주일을 고정 validation set으로 설정 + 훈련 데이터를 점차 줄임
-
 ```
 # 마지막 일주일 발전량을 validset으로 24시간*7일 = 168
 pds = PredefinedSplit(np.append(-np.ones(len(x)-168), np.zeros(168)))
 ```
+  
+* Blocked timeseries CV에서 mode를 추가해 custom cv를 만듦
+  mode1. n주씩 겹치면서 훈련 + 마지막 일주일을 validation set으로 사용
+  mode2. 가장 마지막 일주일을 고정 validation set으로 설정 + 훈련 데이터를 점차 줄임
+
+
 
 [mode1 그림]
 ![m2](https://github.com/Junoflows/Electricity-usage-forecast/assets/79469037/4c187841-18f3-409b-b615-ea3a586e01b1)
