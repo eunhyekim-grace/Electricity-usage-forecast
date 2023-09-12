@@ -143,6 +143,9 @@ for i in [test]:
 
 ## 모델링
 
+### :warning: 주의 사항 
+Xgboost, LGBM은 earlystopping_rounds 사용을 위해서 낮은 version install해서 사용함.
+
 ### xgboost, lgbm, catboost, extratree
 + 트리 기반 모델로 회귀와 분류에 모두 사용됨
 + 트리 기반 모델이라 변수 scale 의 영향을 덜 받아 따로 scaling 을 안해줘도 됨
@@ -174,8 +177,14 @@ $RSME = (\frac{1}{n}\Sigma_{i=1}^n (\hat{Y_i}-Y_i)^2)^{0.5}$
   mode1. n주씩 겹치면서 훈련 + 마지막 일주일을 validation set으로 사용
   mode2. 가장 마지막 일주일을 고정 validation set으로 설정 + 훈련 데이터를 점차 줄임
 
+```
+# 마지막 일주일 발전량을 validset으로 24시간*7일 = 168
+pds = PredefinedSplit(np.append(-np.ones(len(x)-168), np.zeros(168)))
+```
 
-pds가 가장 좋은 성능을 보여줌.
+[mode1 그림]
+![m2](https://github.com/Junoflows/Electricity-usage-forecast/assets/79469037/4c187841-18f3-409b-b615-ea3a586e01b1)
+
 ```
 class BlockingTimeSeriesSplit():
     def __init__(self, n_splits = 0, mode = 1):
@@ -244,6 +253,7 @@ class BlockingTimeSeriesSplit():
         yield indices[start:mid], indices[mid:stop+1]
 
 ```
+실제 사용은 가장 좋은 성능을 보여준 pds 사용.
 
 
 
