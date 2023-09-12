@@ -112,3 +112,8 @@ $RSME = (\frac{1}{n}\Sigma_{i=1}^n (\hat{Y_i}-Y_i)^2)^{0.5}$
 
 
 
+
+## 결과 및 리뷰
++ xgboost 와 lgbm 으로 시작하였고 제일 결과가 좋은 모델은 catboost 였음
++ Pycaret 으로 가장 효과가 좋은 모델을 찾았을 때도 catboost, xgboost, lgbm 순임
++ 데이터 전처리를 마치고 바로 모델을 돌려보는 것보다는 Pycaret 을 돌려보고 성능 좋은 모델을 선별하여 모델링하는게 좋을 것으로 판단됨.
