@@ -80,3 +80,35 @@ eda_df.humidity = eda_df.humidity.interpolate(method = 'polynomial', order = 3)
   NUll 값으로 대체한 후 pandas의 interpolation(보간법) 활용하여 이상치 채움
 
 ### test 셋에도 같은 과정 적용으로 변수 통일
+
+
+
+## 모델링
+
+### xgboost, lgbm, catboost
++ 트리 기반 모델로 회귀와 분류에 모두 사용됨
++ 트리 기반 모델이라 변수 scale 의 영향을 덜 받아 따로 scaling 을 안해줘도 됨
+https://docs.aws.amazon.com/ko_kr/sagemaker/latest/dg/catboost-hyperparameters.html  
+파라미터 설정 참고한 링크
+
+```
+grid = {'iterations': [500],
+        'learning_rate' : [0.01, 0.03, 0.05, 0.07],
+        'depth': [4,6,8],
+        'l2_leaf_reg': [2,4,6,8],
+        'subsample': [0.8],
+        'colsample_bylevel': [0.8],
+        'random_strength' : [1,3,5,7]
+         }
+```
+gridsearchCV 를 이용해 최적의 파라미터 설정
+
+### 손실함수
+$ MAE = \frac{1}{n}\Sigma_{i=1}^n| \hat{Y_i}-Y_i| $ <br/><br/>
+$ RSME = (\frac{1}{n}\Sigma_{i=1}^n (\hat{Y_i}-Y_i)^2)^{0.5} $  
+
+과소적합보다 과대 적합이 더 좋은 평가지표인 SMAPE 이므로 RMSE 보다 MAE 가 더 좋은 손실함수로 판단
+
+
+
+
