@@ -25,7 +25,7 @@
 
 ### 이상치 처리
 건물별 전력 사용량을 seaborn의 heatmap을 사용해서 행은 24hr로 열은 7일로 가지고 있는 그래프를 그려 이상치를 찾아 시계열 데이터의 특성을 고려해 pandas의 보간법으로 값을 변경함. 아래 그래프에서 이상치 확인 가능.(34번 건물은 월요일 21h경에 이상치 발생)
-![heatmap](https://github.com/Junoflows/Electricity-usage-forecast/assets/79469037/d72c484e-b0ec-47af-bb7f-93cb59b5668b)
+![hm](https://github.com/Junoflows/Electricity-usage-forecast/assets/79469037/5851e3f0-9986-48f9-9344-372540ee7b6e)
 
 ### 건물 유형 별, 평균 전력량 사용별 clustering
 요일 / 시간 별 전력 중앙 값에 대해 scaling하고 건물 유형별, 평균 전력량 사용별 clustering을 진행해 line graph를 그렸을 때 건물 유형 기타를 제외하고는 대체로 비슷한 양상을 보였음. 그러나 보다 정확한 예측을 위해 각 건물 별로 학습을 따로 진행함.
