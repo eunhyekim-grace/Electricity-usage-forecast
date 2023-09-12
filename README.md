@@ -98,11 +98,52 @@ eda_df.humidity = eda_df.humidity.interpolate(method = 'polynomial', order = 3)
 
 ### test 셋에도 같은 과정 적용으로 변수 통일
 
+## autoML - pycaret 사용
+
+### pycaret이란 
+ML workflow을 자동화 하는 opensource library로 여러 머신러닝 task에서 사용하는 모델들을 하나의 환경에서 비교하고 튜닝하는 등 간단한 코드를 통해 편리하게 사용할 수 있도록 자동화한 라이브러리.
+
+### 간단한 코드
+pycaret은 돌리는데 시간이 오래 걸리기 때문에 가장 결과값이 좋지 않았던 40, 42, 54번 건물을 기준으로 가장 좋은 결과값을 리턴하는 모델을 찾아봄.
+공모전 평가 지표인 smape함수를 만들어 custom metric을 추가함.
+```
+add_metric('smape', 'SMAPE', SMAPE, greater_is_better = False)
+
+test = [40,42,54]
+best_models = []
+
+for i in [test]:
+    y = train.loc[train.num == i, 'power']
+    x = train.loc[train.num == i, features]
+    # 마지막 일주일 발전량을 validset으로 24시간*7일 = 168
+    y_train, y_test, x_train, x_test = temporal_train_test_split(y = y, X = x, test_size = 168)
+
+    #pycaret 사용 - df 병합
+    traindata = x_train.join(y_train)
+    testdata = x_test.join(y_test)
+
+    exp = setup(traindata, target= 'power')
+
+    add_metric('smape', 'SMAPE', SMAPE, greater_is_better = False)
+    get_metrics()
+
+    best = compare_models(sort = 'MAE')
+    model = create_model(best)
+    tuned_model = tune_model(model, optimize = 'MAE', n_iter = 100,  choose_better = True)
+    best_models.append(tuned_model)
+    pm = predict_model(tuned_model, data = testdata)
+    building = 'building'+str(i)
+    print(building + '|| SMAPE : {}'.format(SMAPE(pm['power'], pm['prediction_label'])))
+```
+
+### 결과
+가장 결과 값이 좋은 상위 5개의 모델 중 비슷한 성격을 가진 Extra Trees Regressor와 Random Forest Regressor 중 가장 좋은 결과를 보여준 ET를 선택한 대신 사용하지 않은 RF Regressor를 제외하고 나머지 모든 모델을 사용해서 Regression 실시.
+
 
 
 ## 모델링
 
-### xgboost, lgbm, catboost
+### xgboost, lgbm, catboost, extratree
 + 트리 기반 모델로 회귀와 분류에 모두 사용됨
 + 트리 기반 모델이라 변수 scale 의 영향을 덜 받아 따로 scaling 을 안해줘도 됨
 https://docs.aws.amazon.com/ko_kr/sagemaker/latest/dg/catboost-hyperparameters.html  
