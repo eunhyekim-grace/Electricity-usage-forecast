@@ -25,6 +25,7 @@
 
 ### 이상치 처리
 건물별 전력 사용량을 seaborn의 heatmap을 사용해서 행은 24hr로 열은 7일로 가지고 있는 그래프를 그려 이상치를 찾아 시계열 데이터의 특성을 고려해 pandas의 보간법으로 값을 변경함. 아래 그래프에서 이상치 확인 가능.(34번 건물은 월요일 21h경에 이상치 발생)
+
 ![hm](https://github.com/Junoflows/Electricity-usage-forecast/assets/79469037/5851e3f0-9986-48f9-9344-372540ee7b6e)
 
 ### 건물 유형 별, 평균 전력량 사용별 clustering
@@ -32,6 +33,7 @@
 
 ### 태양열
 건물 정보 csv에서 태양광 발전판을 소유하고 있는 회사들에 대해 전일 일조량 평균 값과 당일 전력 사용량 평균값 사이의 관계를 x축 일조량 값, y축을 전력 사용량 그래프로 시각화함. 그래프를 보면 태양광 에너지 저축량이 올라감에 따라 전력 사용량이 줄어드는 반비례 관계에 있는 건물들을 확인할 수 있음. 
+
 ![solar](https://github.com/Junoflows/Electricity-usage-forecast/assets/79469037/31e814b6-84d5-4973-a8e0-a01fc04e8c55)
 
 ### ESS+ PCS capacity
